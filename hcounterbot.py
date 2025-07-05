@@ -27,7 +27,7 @@ subreddits = {
     "r/theletterx" : 'x',
     "r/thelettery" : 'y',
     "r/theletterz" : 'z'
-    }
+ }
 
 def main():
     S = 0
@@ -37,12 +37,17 @@ def main():
         text = file.read()
     print("Inputted.\n")
     ind = counting_individual(text)
-    stretch = counting_series(text)
+    stretch_arr = counting_series(text)
+    single_and_multiple = stretch_arr[0]
+    multiple = stretch_arr[1]
+    single = single_and_multiple - multiple
     occupancy = (ind/len(text)) * 100
     occupancy = round(occupancy * 100) / 100
-    print("Total number of Hs:", ind)
-    print("Total stretches of Hs:", stretch)
+    print("\nTotal number of Hs:", ind)
     print("Occupying", str(occupancy) + "% of the entire text.");
+    print("\nTotal stretches of Hs:", single_and_multiple)
+    print("Single Hs:", single)
+    print("Multiple Hs at a stretch:", multiple)
     #TODO: Loop through the comments and posts
     #TODO: For every text, find out the number of occurences
     #TODO: Add those occurences
@@ -59,14 +64,18 @@ def counting(string, text):
 
 # Individual counts of the letter
 def counting_individual(text, letter='h'):
-   string = "[" + letter + letter.upper() + "]"
-   return counting(string, text)
+    string = "[" + letter + letter.upper() + "]"
+    return counting(string, text)
 
 
-# How many stretches of the letter
+# How many stretches of the letter [single_and_multiple, multiple]
 def counting_series(text, letter='h'):
-   string = "[" + letter + letter.upper() + "]+"
-   return counting(string, text)
+    string = "[" + letter + letter.upper() + "]+"
+    count = []
+    count.append(counting(string, text))
+    string = "(?=[" + letter + letter.upper() + "]{2})[" + letter + letter.upper() + "]+"
+    count.append(counting(string, text))
+    return count
 
 
 main()
