@@ -9,5 +9,5 @@
 # Programs
 
 - Stats based on a single comment
-- Stats based on multiple comments
+- Stats based on multiple comments (Rigorous testing for analyzing millions of files)
 - Looping
