@@ -1,32 +1,32 @@
 from re import findall
 
 subreddits = {
-    "r/thelettera" : 'a',
-    "r/theletterb" : 'b',
-    "r/theletterc" : 'c',
-    "r/theletterd" : 'd',
-    "r/thelettere" : 'e',
-    "r/theletterf" : 'f',
-    "r/theletterg" : 'g',
-    "r/theletterh" : 'h',
-    "r/theletteri" : 'i',
-    "r/theletterj" : 'j',
-    "r/theletterk" : 'k',
-    "r/theletterl" : 'l',
-    "r/theletterm" : 'm',
-    "r/thelettern" : 'n',
-    "r/thelettero" : 'o',
-    "r/theletterp" : 'p',
-    "r/theletterq" : 'q',
-    "r/theletterr" : 'r',
-    "r/theletters" : 's',
-    "r/thelettert" : 't',
-    "r/theletteru" : 'u',
-    "r/theletterv" : 'v',
-    "r/theletterw" : 'w',
-    "r/theletterx" : 'x',
-    "r/thelettery" : 'y',
-    "r/theletterz" : 'z'
+    "thelettera" : 'a',
+    "theletterb" : 'b',
+    "theletterc" : 'c',
+    "theletterd" : 'd',
+    "thelettere" : 'e',
+    "theletterf" : 'f',
+    "theletterg" : 'g',
+    "theletterh" : 'h',
+    "theletteri" : 'i',
+    "theletterj" : 'j',
+    "theletterk" : 'k',
+    "theletterl" : 'l',
+    "theletterm" : 'm',
+    "thelettern" : 'n',
+    "thelettero" : 'o',
+    "theletterp" : 'p',
+    "theletterq" : 'q',
+    "theletterr" : 'r',
+    "theletters" : 's',
+    "thelettert" : 't',
+    "theletteru" : 'u',
+    "theletterv" : 'v',
+    "theletterw" : 'w',
+    "theletterx" : 'x',
+    "thelettery" : 'y',
+    "theletterz" : 'z'
  }
 
 def main():
@@ -38,16 +38,18 @@ def main():
     print("Inputted.\n")
     ind = counting_individual(text)
     stretch_arr = counting_series(text)
-    single_and_multiple = stretch_arr[0]
+    total = stretch_arr[0]
     multiple = stretch_arr[1]
-    single = single_and_multiple - multiple
+    max_stretch = stretch_arr[2]
+    single = total - multiple
     occupancy = (ind/len(text)) * 100
     occupancy = round(occupancy * 100) / 100
     print("\nTotal number of Hs:", ind)
     print("Occupying", str(occupancy) + "% of the entire text.");
-    print("\nTotal stretches of Hs:", single_and_multiple)
-    print("Single Hs:", single)
-    print("Multiple Hs at a stretch:", multiple)
+    print("\nTotal stretches of Hs:", total)
+    print("No. of single Hs:", single)
+    print("No. of multiple Hs at a stretch:", multiple)
+    print("Length of the longest stretch of Hs:", max_stretch)
     #TODO: Loop through the comments and posts
     #TODO: For every text, find out the number of occurences
     #TODO: Add those occurences
@@ -56,25 +58,33 @@ def main():
     #TODO: average length of comments/posts, total length of all the comments/posts, length of a specific comment/post, average of number of individual Hs
 
 
-# Main place to count stuff
-def counting(string, text):
-    matches = len(findall(string, text))
-    return matches
+# Main place to count stuff [matches, 1] or [matches, longest_length]
+def counting(string, text, longest=False):
+    arr = findall(string, text)
+    out = []
+    out.append(len(arr))
+    if longest:
+        out.append(len(max(arr, key=len)))
+    else:
+        out.append(1)
+    return out
 
 
 # Individual counts of the letter
 def counting_individual(text, letter='h'):
     string = "[" + letter + letter.upper() + "]"
-    return counting(string, text)
+    return (counting(string, text))[0]
 
 
-# How many stretches of the letter [single_and_multiple, multiple]
+# How many stretches of the letter [total, multiple]
 def counting_series(text, letter='h'):
     string = "[" + letter + letter.upper() + "]+"
     count = []
-    count.append(counting(string, text))
+    count.append((counting(string, text))[0])
     string = "(?=[" + letter + letter.upper() + "]{2})[" + letter + letter.upper() + "]+"
-    count.append(counting(string, text))
+    arr = counting(string, text, True)
+    count.append(arr[0])
+    count.append(arr[1])
     return count
 
 
